@@ -1,0 +1,17 @@
+[
+  {
+    "category_id": "1",
+    "name": "Microbus",
+    "image": "https://i.pinimg.com/originals/97/83/a4/9783a473602d7490d1eb0880bd158563.jpg"
+  },
+  {
+    "category_id": "2",
+    "name": "Luxury car",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdb1LmDeEQKvOnFMcpitACtCqK_3CmI-CCKg&usqp=CAU"
+  },
+  {
+    "category_id": "3",
+    "name": "Electric car",
+    "image": "https://img.freepik.com/free-vector/electric-vehicle-use-abstract-concept-illustration-zero-emission-vehicle-urban-electromobile-service-modern-electric-car-industrial-use-eco-friendly-transportation_335657-3425.jpg"
+  }
+]
