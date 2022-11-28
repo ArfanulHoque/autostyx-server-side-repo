@@ -27,11 +27,19 @@ async function run() {
   try {
     const collection = client.db("autoStyx").collection("users");
     const categoriesCollection = client.db("autoStyx").collection("categories");
+    const productsCollection = client.db("autoStyx").collection("products");
 
     app.get("/categories", async (req, res) => {
       const query = {};
       const users = await categoriesCollection.find(query).toArray();
       res.send(users);
+    });
+
+    app.get("/categories/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { category_id: id };
+      const service = await productsCollection.find(query).toArray();
+      res.send(service);
     });
   } finally {
   }
