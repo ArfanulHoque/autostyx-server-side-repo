@@ -28,6 +28,9 @@ async function run() {
     const collection = client.db("autoStyx").collection("users");
     const categoriesCollection = client.db("autoStyx").collection("categories");
     const productsCollection = client.db("autoStyx").collection("products");
+    const bookingsCollection = client
+      .db("autoStyx")
+      .collection("bookingProduct");
 
     app.get("/categories", async (req, res) => {
       const query = {};
@@ -40,6 +43,29 @@ async function run() {
       const query = { category_id: id };
       const service = await productsCollection.find(query).toArray();
       res.send(service);
+    });
+
+    app.post("/bookings", async (req, res) => {
+      const booking = req.body;
+      const query = {
+        user_email: booking.user_email,
+        Product_name: booking.Product_name,
+      };
+      const alreadyBooked = await bookingsCollection.find(query).toArray();
+
+      if (alreadyBooked.length) {
+        const message = `You already have booking on ${booking.appointmentDate}`;
+        return res.send({ acknowledged: false, message });
+      }
+      const result = await bookingsCollection.insertOne(booking);
+      res.send(result);
+    });
+
+    app.get("/bookings", async (req, res) => {
+      const email = req.query.user_email;
+      const query = { email: email };
+      const bookings = await bookingsCollection.find(query).toArray();
+      res.send(bookings);
     });
   } finally {
   }
