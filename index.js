@@ -26,6 +26,13 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const collection = client.db("autoStyx").collection("users");
+    const categoriesCollection = client.db("autoStyx").collection("categories");
+
+    app.get("/categories", async (req, res) => {
+      const query = {};
+      const users = await categoriesCollection.find(query).toArray();
+      res.send(users);
+    });
   } finally {
   }
 }
