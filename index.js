@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion } = require("mongodb");
+// const jwt = require("jsonwebtoken");
 const port = process.env.PORT || 5000;
 require("dotenv").config();
 
@@ -28,6 +29,7 @@ async function run() {
     const usersCollection = client.db("autoStyx").collection("users");
     const categoriesCollection = client.db("autoStyx").collection("categories");
     const productsCollection = client.db("autoStyx").collection("products");
+    const advertiseCollection = client.db("autoStyx").collection("advertise");
     const bookingsCollection = client
       .db("autoStyx")
       .collection("bookingProduct");
@@ -58,6 +60,35 @@ async function run() {
       res.send(service);
     });
 
+    app.get("/products", async (req, res) => {
+      const email = req.query.email;
+      const query = { seller_email: email };
+      const bookings = await productsCollection.find(query).toArray();
+      res.send(bookings);
+    });
+
+    app.post("/advertise", async (req, res) => {
+      const advertise = req.body;
+      const query = {
+        name: advertise.name,
+        resalePrice: advertise.resalePrice,
+      };
+      const alreadyAdded = await advertiseCollection.find(query).toArray();
+
+      if (alreadyAdded.length) {
+        const message = `You already have booking on `;
+        return res.send({ acknowledged: false, message });
+      }
+      const result = await advertiseCollection.insertOne(advertise);
+      res.send(result);
+    });
+
+    app.get("/advertise", async (req, res) => {
+      const query = {};
+      const advertise = await advertiseCollection.find(query).toArray();
+      res.send(advertise);
+    });
+
     app.post("/bookings", async (req, res) => {
       const booking = req.body;
       const query = {
@@ -76,10 +107,24 @@ async function run() {
 
     app.get("/bookings", async (req, res) => {
       const email = req.query.user_email;
+      // console.log("token", req.headers.authorization);
       const query = { email: email };
       const bookings = await bookingsCollection.find(query).toArray();
       res.send(bookings);
     });
+
+    // app.get("/jwt", async (req, res) => {
+    //   const email = req.query.email;
+    //   const query = { email: email };
+    //   const user = await usersCollection.findOne(query);
+    //   if (user) {
+    //     const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, {
+    //       expiresIn: "1h",
+    //     });
+    //     return res.send({ accessToken: token });
+    //   }
+    //   res.status(403).send({ accessToken: "" });
+    // });
   } finally {
   }
 }
