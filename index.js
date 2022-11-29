@@ -25,12 +25,18 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const collection = client.db("autoStyx").collection("users");
+    const usersCollection = client.db("autoStyx").collection("users");
     const categoriesCollection = client.db("autoStyx").collection("categories");
     const productsCollection = client.db("autoStyx").collection("products");
     const bookingsCollection = client
       .db("autoStyx")
       .collection("bookingProduct");
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.send(result);
+    });
 
     app.get("/categories", async (req, res) => {
       const query = {};
