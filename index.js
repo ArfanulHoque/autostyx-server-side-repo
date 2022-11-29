@@ -38,6 +38,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/users", async (req, res) => {
+      const role = req.query.role;
+      const query = { role: role };
+      const users = await usersCollection.find(query).toArray();
+      res.send(users);
+    });
+
     app.get("/categories", async (req, res) => {
       const query = {};
       const users = await categoriesCollection.find(query).toArray();
